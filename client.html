@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Client</title>
+    
+  </head>
+  <body>
+    <div class="info" id="info"></div>
+    <canvas id="myCanvas" width="300" height="300"></canvas>
+
+    <script src="https://www.baqend.com/js-sdk/latest/baqend-realtime.min.js"></script>
+    <script>
+      //getting URL Parameters
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      var clid = url.searchParams.get("clid");
+      var cid = url.searchParams.get("cid");    // Canvas-ID
+      var c = url.searchParams.get("c");        // Color
+      var x = url.searchParams.get("x");        // x-axis
+      var y = url.searchParams.get("y");        // y-axis 
+      var l = url.searchParams.get("l");        // limit
+
+
+      var app = 'real-time-benchmark';
+      DB.connect(app);
+      DB.ready(function(){
+        console.log('Client '+clid+' connected');
+        var query;
+        var subscription;
+        var info;
+
+        if(!cid){
+          if(!c && !x){
+                if(l){
+                    query = DB.Point.find()
+                    .descending('z')
+                    .limit(l);
+                    info = "All Canvases<br>"+l+" highest Z-Values";
+                    console.log("LIMIT");
+                    subscription = query.resultStream(result => onChange(result));
+                }else{
+                    query = DB.Point.find();
+                    info = "All Canvases<br>All Points";
+                    subscription = query.resultStream(result => onChange(result));
+                }
+                
+            }else{
+                if(c){
+                    query = DB.Point.find()
+                    .equal('color', c);
+                    info = "All Canvases<br>Color "+c; 
+                    subscription = query.resultStream(result => onChange(result));
+                }else{
+                    if(!y){
+                      query = DB.Point.find()
+                      .greaterThan('x', parseInt(x));
+                      info = "All Canvases<br>X over "+x; 
+                      subscription = query.resultStream(result => onChange(result));
+                    }else{
+                      query = DB.Point.find()
+                      .greaterThan('x', parseInt(x))
+                      .greaterThan('y', parseInt(y));  
+                      info = "All Canvases<br>X over "+x+"<br>Y over "+y; 
+                      subscription = query.resultStream(result => onChange(result));
+                    }
+                }
+          }
+        }else{
+            if(!c && !x){
+                if(l){
+                    query = DB.Point.find()
+                    .equal('canvas', parseInt(cid))
+                    .descending('z')
+                    .limit(l);
+                    info = "Canvas "+cid+"<br>"+l+" highest Z-Values";
+                    subscription = query.resultStream(result => onChange(result));
+                }else{
+                    query = DB.Point.find()
+                    .equal('canvas', parseInt(cid));
+                    info = "Canvas "+cid+"<br>All Points";
+                    subscription = query.resultStream(result => onChange(result));
+                }
+                
+            }else{
+                if(c){
+                    query = DB.Point.find()
+                    .equal('canvas', parseInt(cid))
+                    .equal('color', c);
+                    info ="Canvas "+cid+"<br>Color "+c; 
+                    subscription = query.resultStream(result => onChange(result));
+                }else{
+                    if(!y){
+                      query = DB.Point.find()
+                      .equal('canvas', parseInt(cid))
+                      .greaterThan('x', parseInt(x));
+                      info = "Canvas "+cid+"<br>X over "+x; 
+                      subscription = query.resultStream(result => onChange(result));
+                    }else{
+                      query = DB.Point.find()
+                      .equal('canvas', parseInt(cid))
+                      .greaterThan('x', parseInt(x))
+                      .greaterThan('y', parseInt(y));  
+                      info = "Canvas "+cid+"<br>X over "+x+"<br>Y over "+y; 
+                      subscription = query.resultStream(result => onChange(result));
+                    }
+                }
+          }
+        }
+        document.getElementById("info").innerHTML = info;
+      });
+
+      function onChange(result){
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        ctx.clearRect(0,0,c.width,c.height);
+        result.forEach(element => {
+          ctx.fillStyle = element.color;
+          ctx.fillRect(element.x * 3,(100-element.y) * 3,5,5);
+        });
+      }
+    </script>
+  </body>
+</html>

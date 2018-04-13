@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cockpit</title>
+    <style>
+      iframe{
+        margin:0;
+        padding:0;
+        border: 2px solid gray;
+        height:300px;
+        width:300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <button id="start">Start inserting</button>
+      <button id="stop">Stop insert</button>
+      <button id="reset">Reset</button>
+    </div>
+    
+    <iframe scrolling="no" src="client.html?clid=1"></iframe>
+    <iframe scrolling="no" src="client.html?clid=2&c=BLUE"></iframe>
+    <iframe scrolling="no" src="client.html?clid=3&x=20"></iframe>
+    <iframe scrolling="no" src="client.html?clid=4&x=20&y=40"></iframe>
+    <iframe scrolling="no" src="client.html?clid=5&l=10"></iframe>
+    <br />
+    <iframe scrolling="no" src="client.html?clid=6&cid=0"></iframe>
+    <iframe scrolling="no" src="client.html?clid=7&cid=0&c=RED"></iframe>
+    <iframe scrolling="no" src="client.html?clid=8&cid=0&x=40"></iframe>
+    <iframe scrolling="no" src="client.html?clid=9&cid=0&x=40&y=20"></iframe>
+    <iframe scrolling="no" src="client.html?clid=10&cid=0&l=15"></iframe>
+    <br />
+    <iframe scrolling="no" src="client.html?clid=11&cid=1"></iframe>
+    <iframe scrolling="no" src="client.html?clid=12&cid=1&c=GREEN"></iframe>
+    <iframe scrolling="no" src="client.html?clid=13&cid=1&x=70"></iframe>
+    <iframe scrolling="no" src="client.html?clid=14&cid=1&x=70&y=10"></iframe>
+    <iframe scrolling="no" src="client.html?clid=15&cid=1&l=20"></iframe>
+
+<script src="https://www.baqend.com/js-sdk/latest/baqend-realtime.min.js"></script>    
+<script src="bundle.js"></script>
+
+    
+    
+  </body>
+</html>
