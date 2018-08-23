@@ -117,8 +117,15 @@
         var ctx = c.getContext("2d");
         ctx.clearRect(0,0,c.width,c.height);
         result.forEach(element => {
-          ctx.fillStyle = element.color;
-          ctx.fillRect(element.x * 3,(100-element.y) * 3,5,5);
+          var color = element.color;
+          ctx.globalAlpha = 0.8;
+          ctx.fillStyle = color;
+          ctx.strokeStyle = color;
+          //ctx.fillRect(element.x * 3,(100-element.y) * 3,5,5);
+          ctx.beginPath();
+          ctx.arc(element.x * 3,(100-element.y) * 3,element.z/10,0,2*Math.PI);
+          ctx.fill();
+          ctx.stroke();
         });
       }
     </script>
