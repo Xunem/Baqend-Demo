@@ -27,25 +27,54 @@
       <button id="start">Start inserting</button>
       <button id="stop">Stop inserting</button>
     </div>
-    
-    <iframe scrolling="no" src="client.html?clid=1"></iframe>
-    <iframe scrolling="no" src="client.html?clid=2&c=BLUE"></iframe>
-    <iframe scrolling="no" src="client.html?clid=3&x=20"></iframe>
-    <iframe scrolling="no" src="client.html?clid=4&x=20&y=40"></iframe>
-    <iframe scrolling="no" src="client.html?clid=5&l=10"></iframe>
-    <br />
-    <iframe scrolling="no" src="client.html?clid=6&cid=0"></iframe>
-    <iframe scrolling="no" src="client.html?clid=7&cid=0&c=RED"></iframe>
-    <iframe scrolling="no" src="client.html?clid=8&cid=0&x=40"></iframe>
-    <iframe scrolling="no" src="client.html?clid=9&cid=0&x=40&y=20"></iframe>
-    <iframe scrolling="no" src="client.html?clid=10&cid=0&l=15"></iframe>
-    <br />
-    <iframe scrolling="no" src="client.html?clid=11&cid=1"></iframe>
-    <iframe scrolling="no" src="client.html?clid=12&cid=1&c=GREEN"></iframe>
-    <iframe scrolling="no" src="client.html?clid=13&cid=1&x=70"></iframe>
-    <iframe scrolling="no" src="client.html?clid=14&cid=1&x=70&y=10"></iframe>
-    <iframe scrolling="no" src="client.html?clid=15&cid=1&l=20"></iframe>
+    <h2>Baqend, All Canvases</h2>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=1"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=1&c=BLUE"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=2&x=20"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=4&x=20&y=40"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=10&l=10"></iframe>
+    <br>
+    <h2>Firebase, All Canvases</h2>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2&c=BLUE"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2&x=20"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=4&x=20&y=40"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=10&l=10"></iframe>
 
+    <h2>Baqend, Canvas 1</h2>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=1&cid=1"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=1&cid=1&c=GREEN"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=2&cid=1&x=50"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=4&cid=1&x=50&y=10"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=10&cid=1&l=15"></iframe>
+    <br>
+    <h2>Firebase, Canvas 1</h2>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2&cid=1"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2&cid=1&c=GREEN"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=2&cid=1&x=50"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=4&cid=1&x=50&y=10"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=10&cid=1&l=15"></iframe>
+    <!--
+    <iframe scrolling="no" src="client.html?bp=ba&clid=2&c=BLUE"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=3&x=20"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=4&x=20&y=40"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=5&l=10"></iframe>
+    <br />
+    <iframe scrolling="no" src="client.html?bp=ba&clid=6&cid=0"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=7&cid=0&c=RED"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=8&cid=0&x=40"></iframe>
+    <iframe scrolling="no" src="client.html?bp=fb&clid=9&cid=0&x=40&y=20"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=10&cid=0&l=15"></iframe>
+    <br />
+    <iframe scrolling="no" src="client.html?bp=ba&clid=11&cid=1"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=12&cid=1&c=GREEN"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=13&cid=1&x=70"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=14&cid=1&x=70&y=10"></iframe>
+    <iframe scrolling="no" src="client.html?bp=ba&clid=15&cid=1&l=20"></iframe>
+
+    -->
+
+<script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
 <script src="https://www.baqend.com/js-sdk/latest/baqend-realtime.min.js"></script>    
 <script src="bundle.js"></script>
 

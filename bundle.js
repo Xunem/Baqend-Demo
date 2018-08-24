@@ -92,6 +92,17 @@ module.exports = v4;
 'use strict';
 
 var uuidv4 = require("uuid/v4");
+
+var config = {
+    apiKey: "AIzaSyAutXeruAGoGxOSuTQSxBH-iVxHoN9K56k",
+    authDomain: "fir-demo-aa3d1.firebaseapp.com",
+    databaseURL: "https://fir-demo-aa3d1.firebaseio.com",
+    projectId: "fir-demo-aa3d1",
+    storageBucket: "fir-demo-aa3d1.appspot.com",
+    messagingSenderId: "801259432549"
+  };
+var defaultApp = firebase.initializeApp(config);
+
 var app = 'real-time-benchmark';
   var refreshIntervalId;
   DB.connect(app);
@@ -99,7 +110,6 @@ var app = 'real-time-benchmark';
   DB.ready(function () {
     document.getElementById ("start").addEventListener("click", startInsert, false);
     document.getElementById ("stop").addEventListener("click", stopInsert, false);
-    document.getElementById ("reset").addEventListener("click", reset, false);
   });
 
   function reset(){
@@ -123,14 +133,29 @@ var app = 'real-time-benchmark';
     refreshIntervalId = setInterval(function () {
         for (var i = 0; i < 1; i++) {
             var id = uuidv4();
+            var x = Math.floor(Math.random() * 100);
+            var y = Math.floor(Math.random() * 100);
+            var z = Math.floor(Math.random() * 100);
+            var color = colors[Math.floor(Math.random() * 4)];
+            var canvas = Math.floor(Math.random() * 2);
 
+            var newPointRef = firebase.database().ref('points/'+canvas+'/').push();
+            newPointRef.set({
+                pid: id,
+                canvas: canvas,
+                color: color,
+                x: x,
+                y: y,
+                z: z
+            });
+            
             var point = new DB.Point({
                 pid: id,
-                canvas: Math.floor(Math.random() * 2),
-                color: colors[Math.floor(Math.random() * 4)],
-                x: Math.floor(Math.random() * 100),
-                y: Math.floor(Math.random() * 100),
-                z: Math.floor(Math.random() * 100)
+                canvas: canvas,
+                color: color,
+                x: x,
+                y: y,
+                z: z
             });
 
             point.save();

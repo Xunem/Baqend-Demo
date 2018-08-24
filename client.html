@@ -10,12 +10,13 @@
   <body>
     <div class="info" id="info"></div>
     <canvas id="myCanvas" width="300" height="300"></canvas>
-
+    <script src="https://www.gstatic.com/firebasejs/5.4.0/firebase.js"></script>
     <script src="https://www.baqend.com/js-sdk/latest/baqend-realtime.min.js"></script>
     <script>
       //getting URL Parameters
       var url_string = window.location.href;
       var url = new URL(url_string);
+      var bp = url.searchParams.get("bp");      //Backend Provider
       var clid = url.searchParams.get("clid");
       var cid = url.searchParams.get("cid");    // Canvas-ID
       var c = url.searchParams.get("c");        // Color
@@ -23,94 +24,232 @@
       var y = url.searchParams.get("y");        // y-axis 
       var l = url.searchParams.get("l");        // limit
 
+      var supported = true;
 
-      var app = 'real-time-benchmark';
-      DB.connect(app);
-      DB.ready(function(){
-        console.log('Client '+clid+' connected');
-        var query;
-        var subscription;
-        var info;
+      if(bp === 'ba'){
+        var app = 'real-time-benchmark';
+        DB.connect(app);
+        DB.ready(function(){
+          console.log('Client '+clid+' connected');
+          var query;
+          var subscription;
+          var info;
+
+          if(!cid){
+            if(!c && !x){
+                  if(l){
+                      query = DB.Point.find()
+                      .descending('z')
+                      .limit(l);
+                      info = "All Canvases<br>"+l+" highest Z-Values";
+                      console.log("LIMIT");
+                      subscription = query.resultStream(result => onChange(result));
+                  }else{
+                      query = DB.Point.find();
+                      info = "All Canvases<br>All Points";
+                      subscription = query.resultStream(result => onChange(result));
+                  }
+                  
+              }else{
+                  if(c){
+                      query = DB.Point.find()
+                      .equal('color', c);
+                      info = "All Canvases<br>Color "+c; 
+                      subscription = query.resultStream(result => onChange(result));
+                  }else{
+                      if(!y){
+                        query = DB.Point.find()
+                        .greaterThan('x', parseInt(x));
+                        info = "All Canvases<br>X over "+x; 
+                        subscription = query.resultStream(result => onChange(result));
+                      }else{
+                        query = DB.Point.find()
+                        .greaterThan('x', parseInt(x))
+                        .greaterThan('y', parseInt(y));  
+                        info = "All Canvases<br>X over "+x+"<br>Y over "+y; 
+                        subscription = query.resultStream(result => onChange(result));
+                      }
+                  }
+            }
+          }else{
+              if(!c && !x){
+                  if(l){
+                      query = DB.Point.find()
+                      .equal('canvas', parseInt(cid))
+                      .descending('z')
+                      .limit(l);
+                      info = "Canvas "+cid+"<br>"+l+" highest Z-Values";
+                      subscription = query.resultStream(result => onChange(result));
+                  }else{
+                      query = DB.Point.find()
+                      .equal('canvas', parseInt(cid));
+                      info = "Canvas "+cid+"<br>All Points";
+                      subscription = query.resultStream(result => onChange(result));
+                  }
+                  
+              }else{
+                  if(c){
+                      query = DB.Point.find()
+                      .equal('canvas', parseInt(cid))
+                      .equal('color', c);
+                      info ="Canvas "+cid+"<br>Color "+c; 
+                      subscription = query.resultStream(result => onChange(result));
+                  }else{
+                      if(!y){
+                        query = DB.Point.find()
+                        .equal('canvas', parseInt(cid))
+                        .greaterThan('x', parseInt(x));
+                        info = "Canvas "+cid+"<br>X over "+x; 
+                        subscription = query.resultStream(result => onChange(result));
+                      }else{
+                        query = DB.Point.find()
+                        .equal('canvas', parseInt(cid))
+                        .greaterThan('x', parseInt(x))
+                        .greaterThan('y', parseInt(y));  
+                        info = "Canvas "+cid+"<br>X over "+x+"<br>Y over "+y; 
+                        subscription = query.resultStream(result => onChange(result));
+                      }
+                  }
+            }
+          }
+          document.getElementById("info").innerHTML = info;
+        });
+      } else if(bp === 'fb'){
+        
+        var config = {
+          apiKey: "AIzaSyAutXeruAGoGxOSuTQSxBH-iVxHoN9K56k",
+          authDomain: "fir-demo-aa3d1.firebaseapp.com",
+          databaseURL: "https://fir-demo-aa3d1.firebaseio.com",
+          projectId: "fir-demo-aa3d1",
+          storageBucket: "fir-demo-aa3d1.appspot.com",
+          messagingSenderId: "801259432549"
+        };
+        var defaultApp = firebase.initializeApp(config);
 
         if(!cid){
-          if(!c && !x){
-                if(l){
-                    query = DB.Point.find()
-                    .descending('z')
-                    .limit(l);
-                    info = "All Canvases<br>"+l+" highest Z-Values";
-                    console.log("LIMIT");
-                    subscription = query.resultStream(result => onChange(result));
-                }else{
-                    query = DB.Point.find();
-                    info = "All Canvases<br>All Points";
-                    subscription = query.resultStream(result => onChange(result));
-                }
-                
-            }else{
-                if(c){
-                    query = DB.Point.find()
-                    .equal('color', c);
-                    info = "All Canvases<br>Color "+c; 
-                    subscription = query.resultStream(result => onChange(result));
-                }else{
-                    if(!y){
-                      query = DB.Point.find()
-                      .greaterThan('x', parseInt(x));
-                      info = "All Canvases<br>X over "+x; 
-                      subscription = query.resultStream(result => onChange(result));
-                    }else{
-                      query = DB.Point.find()
-                      .greaterThan('x', parseInt(x))
-                      .greaterThan('y', parseInt(y));  
-                      info = "All Canvases<br>X over "+x+"<br>Y over "+y; 
-                      subscription = query.resultStream(result => onChange(result));
-                    }
-                }
-          }
-        }else{
             if(!c && !x){
-                if(l){
-                    query = DB.Point.find()
-                    .equal('canvas', parseInt(cid))
-                    .descending('z')
-                    .limit(l);
-                    info = "Canvas "+cid+"<br>"+l+" highest Z-Values";
-                    subscription = query.resultStream(result => onChange(result));
-                }else{
-                    query = DB.Point.find()
-                    .equal('canvas', parseInt(cid));
-                    info = "Canvas "+cid+"<br>All Points";
-                    subscription = query.resultStream(result => onChange(result));
-                }
-                
-            }else{
-                if(c){
-                    query = DB.Point.find()
-                    .equal('canvas', parseInt(cid))
-                    .equal('color', c);
-                    info ="Canvas "+cid+"<br>Color "+c; 
-                    subscription = query.resultStream(result => onChange(result));
-                }else{
-                    if(!y){
-                      query = DB.Point.find()
-                      .equal('canvas', parseInt(cid))
-                      .greaterThan('x', parseInt(x));
-                      info = "Canvas "+cid+"<br>X over "+x; 
-                      subscription = query.resultStream(result => onChange(result));
-                    }else{
-                      query = DB.Point.find()
-                      .equal('canvas', parseInt(cid))
-                      .greaterThan('x', parseInt(x))
-                      .greaterThan('y', parseInt(y));  
-                      info = "Canvas "+cid+"<br>X over "+x+"<br>Y over "+y; 
-                      subscription = query.resultStream(result => onChange(result));
-                    }
-                }
+                  if(l){
+                    /*var cvs = firebase.database().ref('points/');
+                    cvs.on('child_added', function(data) {
+                      var points = firebase.database().ref('points/'+data.key+'/');
+                      points.orderByChild("z").limitToLast(parseInt(l)).on("child_added", function(snapshot) {
+                        onChangeFB(snapshot);
+                      });
+                      
+                    });*/
+                    supported = false;
+                    info = "All Canvases<br>"+l+" highest Z-Values<br><i>Not supported</i>";
+                      
+                  }else{
+                    var cvs = firebase.database().ref('points/');
+                    cvs.on('child_added', function(data) {
+                      var points = firebase.database().ref('points/'+data.key+'/');
+                      points.on('child_added', function(data) {
+
+                        onChangeFB(data);
+                      
+                      });
+                    });
+                    info = "All Canvases<br>All Points";
+                    
+                  }
+                  
+              }else{
+                  if(c){
+                    var cvs = firebase.database().ref('points/');
+                    cvs.on('child_added', function(data) {
+                      var points = firebase.database().ref('points/'+data.key+'/');
+                      points.orderByChild("color").equalTo(c).on("child_added", function(snapshot) {
+                        onChangeFB(snapshot);
+                      });
+                    });
+                    info = "All Canvases<br>Color "+c; 
+                      
+                  }else{
+                      if(!y){
+                        var cvs = firebase.database().ref('points/');
+                        cvs.on('child_added', function(data) {
+                          var points = firebase.database().ref('points/'+data.key+'/');
+                          points.orderByChild("x").startAt(parseInt(x)).on("child_added", function(snapshot) {
+                            onChangeFB(snapshot);
+                          });
+                        });
+                        info = "All Canvases<br>X over "+x; 
+                       
+                      }else{
+                        supported = false;
+                        info = "All Canvases<br>X over "+x+"<br>Y over "+y+"<br><i>Not supported</i>"; 
+                        
+                      }
+                  }
+            }
+          }else{
+              if(!c && !x){
+                  if(l){
+                      var points = firebase.database().ref('points/'+cid+'/');
+                      points.orderByChild("z").limitToLast(parseInt(l)).on("child_added", function(snapshot) {
+                        onChangeFB(snapshot);
+                      });
+                      info = "Canvas "+cid+"<br>"+l+" highest Z-Values";
+                      
+                  }else{
+                      var points = firebase.database().ref('points/'+cid+'/');
+                      points.on('child_added', function(data) {
+
+                        onChangeFB(data);
+                      
+                      });
+                      info = "Canvas "+cid+"<br>All Points";
+                      
+                  }
+                  
+              }else{
+                  if(c){
+                    var points = firebase.database().ref('points/'+cid+'/');
+                      points.orderByChild("color").equalTo(c).on("child_added", function(snapshot) {
+                        onChangeFB(snapshot);
+                      });
+                      info ="Canvas "+cid+"<br>Color "+c; 
+                  }else{
+                      if(!y){
+                        var points = firebase.database().ref('points/'+cid+'/');
+                          points.orderByChild("x").startAt(parseInt(x)).on("child_added", function(snapshot) {
+                            onChangeFB(snapshot);
+                          });
+                        info = "Canvas "+cid+"<br>X over "+x; 
+                      }else{
+                        supported = false;
+                        info = "Canvas "+cid+"<br>X over "+x+"<br>Y over "+y+"<br><i>Not supported</i>"; 
+                      }
+                  }
+            }
           }
-        }
-        document.getElementById("info").innerHTML = info;
-      });
+
+          if(!supported){
+            document.getElementById("info").style.backgroundColor = "GREY";
+          }
+          document.getElementById("info").innerHTML = info;
+
+        
+
+      } else{
+        console.log("no Provider");
+      }
+
+      function onChangeFB(data){
+          var c = document.getElementById("myCanvas");
+          var ctx = c.getContext("2d");
+          
+          var color = data.val().color;
+          ctx.globalAlpha = 0.8;
+          ctx.fillStyle = color;
+          ctx.strokeStyle = color;
+          ctx.beginPath();
+          ctx.arc(data.val().x * 3,(100-data.val().y) * 3,data.val().z/10,0,2*Math.PI);
+          ctx.fill();
+          ctx.stroke();
+      }
+      
 
       function onChange(result){
         var c = document.getElementById("myCanvas");
