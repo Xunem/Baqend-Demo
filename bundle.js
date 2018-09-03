@@ -110,10 +110,34 @@ var app = 'real-time-benchmark';
   DB.ready(function () {
     document.getElementById ("start").addEventListener("click", startInsert, false);
     document.getElementById ("stop").addEventListener("click", stopInsert, false);
+    document.getElementById("reset").addEventListener("click", reset, false);
   });
 
   function reset(){
-    DB.modules.get('delete');
+    let login = new XMLHttpRequest();
+    login.open("POST", "https://real-time-benchmark.app.baqend.com/v1/db/User/login", true);
+    login.setRequestHeader("Accept", "application/json");
+    login.setRequestHeader("Content-Type", "application/json");
+    
+    login.onreadystatechange = function() {//Call a function when the state changes.
+        if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            var token = login.getResponseHeader("baqend-authorization-token");
+            console.log(token);
+            let request = new XMLHttpRequest();
+            const url = "https://real-time-benchmark.app.baqend.com/v1/db/Point"
+            request.open("DELETE", url, true);
+            request.setRequestHeader("Accept", "*/*");
+            request.setRequestHeader("authorization", token);
+            request.onreadystatechange = function() {
+                console.log(this);
+            }
+            request.send();
+        }
+    }
+
+    login.send("{\"username\":\"name\",\"password\":\"secret\",\"global\":false}");
+    
+    
   } 
 
   function stopInsert(){
@@ -133,20 +157,22 @@ var app = 'real-time-benchmark';
     refreshIntervalId = setInterval(function () {
         for (var i = 0; i < 1; i++) {
             var id = uuidv4();
-            var x = Math.floor(Math.random() * 100);
-            var y = Math.floor(Math.random() * 100);
-            var z = Math.floor(Math.random() * 100);
+            var x = Math.floor(Math.random() * 300);
+            var y = Math.floor(Math.random() * 300);
+            var z = Math.floor(Math.random() * 300);
             var color = colors[Math.floor(Math.random() * 4)];
             var canvas = Math.floor(Math.random() * 2);
 
             var newPointRef = firebase.database().ref('points/'+canvas+'/').push();
+            var ts = Date.now();
             newPointRef.set({
                 pid: id,
                 canvas: canvas,
                 color: color,
                 x: x,
                 y: y,
-                z: z
+                z: z,
+                ts: ts
             });
             
             var point = new DB.Point({
@@ -155,9 +181,10 @@ var app = 'real-time-benchmark';
                 color: color,
                 x: x,
                 y: y,
-                z: z
+                z: z,
+                ts: ts
             });
-
+            console.log(id + " " + Date.now());
             point.save();
         }
         stop--;
