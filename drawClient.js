@@ -19,7 +19,7 @@ DB.connect(app);
 DB.ready(function(){
     query = DB.DrawPoint.find()
     .descending('ts')
-    .limit(12);
+    .limit(13);
     subscription = query.eventStream().subscribe(event => handle(event));
 });
 
