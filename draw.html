@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <title>Client</title>
+    <style>
+        iframe{
+          margin:0;
+          padding:0;
+          border: 2px solid gray;
+          height:300px;
+          width:300px;
+        }
+        .controls{
+          margin-bottom: 20px;
+        }
+  
+        .controls button{
+          width:200px;
+          height:40px;
+        }
+        #drawCanvas{
+            border: 2px solid gray;
+        }
+      </style>
+  </head>
+  <body>
+    <div>
+    <button id="resetDraw">Reset</button><br>
+    <canvas id="drawCanvas" width="300" height="300"></canvas>
+    <iframe scrolling="no" src="drawClient.html"></iframe>
+    </div>
+
+    <script src="https://www.baqend.com/js-sdk/latest/baqend-realtime.min.js"></script>  
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>  
+
+    <script src="draw.js"></script>
+    
+  </body>
+</html>
